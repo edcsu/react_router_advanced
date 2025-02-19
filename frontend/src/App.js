@@ -7,6 +7,7 @@ import EventDetailPage from "./pages/EventDetailPage";
 import NewEventPage from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
 import EventsRoot from "./pages/EventsRoot";
+import ErrorPage from "./pages/ErrorPage";
 
 // Challenge / Exercise
 // 1. Add five new (dummy) page components (content can be simple <h1> elements)
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
   { 
     path: '', 
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage />},
       { path: 'events', 
