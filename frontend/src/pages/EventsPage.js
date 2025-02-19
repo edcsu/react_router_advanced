@@ -1,5 +1,6 @@
 import React from 'react'
 import EventItem from '../components/EventItem'
+import { Link } from 'react-router'
 
 const eventsList = [
     {
@@ -29,9 +30,13 @@ const EventsPage = () => {
   return (
     <>
         <h1>Events</h1>
-        {eventsList.map((event) => (
-            <EventItem event={event} />
-        ))}
+        <ul>
+            {eventsList.map((event) => (
+                <li key={event.id}> 
+                    <Link to={event.id}>{event.title}</Link>
+                </li>
+            ))}
+        </ul>
     </>
   )
 }
