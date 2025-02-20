@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import {  defer, useLoaderData, Await } from 'react-router';
+import {  useLoaderData, Await } from 'react-router';
 
 import EventsList from '../components/EventsList';
 
@@ -10,7 +10,7 @@ function EventsPage() {
     <>
       <Suspense fallback={<p style={{textAlign: 'center'}}>Loading....</p>}>
         <Await resolve={events}>
-          {(loadedEvents) => <EventsList events={loadEvents} />}
+          {(foundEvents) => <EventsList events={foundEvents} />}
         </Await>
       </Suspense>
     </>
@@ -30,13 +30,14 @@ const loadEvents = async() => {
       
       // return json(body, myOptions)
     } else {
-        return response
+      const resData = await response.json()
+      return resData.events
     }
 }
 
 export const loader = () => {
-  defer({
+  return {
     events: loadEvents()
-  })
+  }
 }
 
