@@ -1,5 +1,5 @@
 
-import { Form, useActionData, useNavigate, useNavigation } from 'react-router';
+import { Form, redirect, useActionData, useNavigate, useNavigation } from 'react-router';
 import classes from './EventForm.module.css';
 
 function EventForm({ method, event }) {
@@ -15,7 +15,7 @@ function EventForm({ method, event }) {
   }
 
   return (
-    <Form method='post' className={classes.form}>
+    <Form method={method} className={classes.form}>
       {data && data.errors && ( <ul>
         {Object.values(data.errors).map(err => <li key={err}>{err}</li>)}
       </ul>)}
@@ -70,3 +70,43 @@ function EventForm({ method, event }) {
 }
 
 export default EventForm;
+
+export const action = async({request, params}) => {
+  const data = await request.formData()
+  const method = request.method
+
+  const eventData = {
+    title: data.get('title'),
+    image: data.get('image'),
+    date: data.get('date'),
+    description: data.get('description')
+  }
+
+  let url = 'http://localhost:8080/events'
+
+  if (method === 'PATCH') {
+    const id = params.id
+    url = `http://localhost:8080/events/${id}`
+  }
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(eventData)
+  });
+
+  if (response.status === 422) {
+    return response
+  }
+  
+  if (!response.ok) {
+      const body = { message: 'Could not save the event' }
+    const myOptions = { status: 500, statusText: "Something failed" };
+    // throw new Response(JSON.stringify(body), myOptions)
+    return Response.json(body, myOptions)
+  } 
+
+  return redirect('/events')
+}
