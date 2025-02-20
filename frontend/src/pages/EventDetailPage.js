@@ -5,7 +5,6 @@ import EventItem from '../components/EventItem'
 const EventDetailPage = () => {
     const params = useParams()
     const data = useRouteLoaderData('event-detail')
-    console.log(data)
     return (
         <>
             <EventItem event={data.event} />
