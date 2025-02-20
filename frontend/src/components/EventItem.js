@@ -1,21 +1,25 @@
-import { NavLink } from 'react-router';
+import { Link, useSubmit } from 'react-router';
 import classes from './EventItem.module.css';
 
 function EventItem({ event }) {
+  const submit = useSubmit()
+  
   function startDeleteHandler() {
-    // ...
+    const procced = window.confirm('Are you sure?')
+
+    if (procced) {
+      submit(null, { method: 'DELETE'})    
+    }
   }
 
   return (
     <article className={classes.event}>
       <img src={event.image} alt={event.title} />
-      <NavLink to={event.id}>
-        <h1>{event.title}</h1>
-      </NavLink>
+      <h1>{event.title}</h1>
       <time>{event.date}</time>
       <p>{event.description}</p>
       <menu className={classes.actions}>
-        <NavLink href="edit">Edit</NavLink>
+        <Link to="edit">Edit</Link>
         <button onClick={startDeleteHandler}>Delete</button>
       </menu>
     </article>

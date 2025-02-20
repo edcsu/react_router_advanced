@@ -1,39 +1,43 @@
-import React from 'react'
-import EventItem from '../components/EventItem'
+import { Suspense } from 'react';
+import {  useLoaderData, Await } from 'react-router';
 
-const eventsList = [
-    {
-        id: '60bc83f2-9fa5-48a0-a613-8d6ad980d281',
-        title: 'Beach carnival',
-        date: '2025-03-15',
-        description: 'Party in the sand',
-        image: ''
-    },
-    {
-        id: 'c253fc6d-e859-4312-b668-b18719692701',
-        title: 'Burna boy concert',
-        date: '2025-03-21',
-        description: 'Afrobeats star on stage',
-        image: ''
-    },
-    {
-        id: '02bcc564-0800-4a01-a5a9-5cd9e9cf5765',
-        title: 'Safari rally',
-        date: '2025-03-31',
-        description: 'WRC rally event',
-        image: ''
-    }
-]
+import EventsList from '../components/EventsList';
 
-const EventsPage = () => {
+function EventsPage() {
+  const { events } = useLoaderData()
+
   return (
     <>
-        <h1>Events</h1>
-        {eventsList.map((event) => (
-            <EventItem event={event} />
-        ))}
+      <Suspense fallback={<p style={{textAlign: 'center'}}>Loading....</p>}>
+        <Await resolve={events}>
+          {(foundEvents) => <EventsList events={foundEvents} />}
+        </Await>
+      </Suspense>
     </>
-  )
+  );
 }
 
-export default EventsPage
+export default EventsPage;
+
+const loadEvents = async() => {
+  const response = await fetch('http://localhost:8080/events');
+
+    if (!response.ok) {
+      const body = { message: 'Could not fetch events' }
+      const myOptions = { status: 500, statusText: "Something failed" };
+      // throw new Response(JSON.stringify(body), myOptions)
+      return Response.json(body, myOptions)
+      
+      // return json(body, myOptions)
+    } else {
+      const resData = await response.json()
+      return resData.events
+    }
+}
+
+export const loader = () => {
+  return {
+    events: loadEvents()
+  }
+}
+
