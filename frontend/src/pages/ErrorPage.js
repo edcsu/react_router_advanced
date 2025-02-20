@@ -1,8 +1,11 @@
 import React from 'react'
+import PageContent from './PageContent'
 
 const ErrorPage = () => {
   return (
-    <h1>ErrorPage</h1>
+    <PageContent title="An error occured!">
+      Something wrong occured  
+    </PageContent>
   )
 }
 
